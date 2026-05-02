@@ -12,7 +12,7 @@ Use this skill to perform a read-only alignment pass between feature specs and t
 Resolve the target before reading deeply:
 
 1. Use a user-provided feature name, spec directory, route, package, module, service, page, or file path when present.
-2. If no target is provided, inspect all directories under `specs/`.
+2. If no target is provided, inspect all directories under `specs/` plus `.specs/template/specs/` and `.specs/generated/specs/` when the user asks for template-wide validation.
 3. If `.specify/feature.json` exists, read `feature_directory` as the active-feature hint. Use it as the target only when the user asks for the active/current feature or when it is the only spec.
 4. If a named target matches both specs and code, validate both surfaces for that same target.
 5. State the resolved target and why it was selected.
@@ -20,7 +20,7 @@ Resolve the target before reading deeply:
 ## Workflow
 
 1. Read the spec truth.
-   - Load the relevant `spec.md`, `plan.md`, `tasks.md`, checklists, and related files under the target `specs/<feature>/` directory when present.
+   - Load the relevant `spec.md`, `plan.md`, `tasks.md`, checklists, and related files under the target `specs/<feature>/`, `.specs/template/specs/<feature>/`, or `.specs/generated/specs/<feature>/` directory when present.
    - Load `.specify/memory/constitution.md` when it exists.
    - Extract concrete requirements, routes, UI states, data behavior, cache behavior, platform support, acceptance criteria, task status, and documentation promises.
    - Do not rely on summaries alone when exact spec wording affects the decision.
@@ -63,7 +63,8 @@ For this repo, validate common spec claims against these implementation owners:
 | Native SQLite setup/reads | `packages/ui/src/client/services/database_service.rs` and its tests |
 | Top bar controls/toasts | `packages/ui/src/client/components/page_header.rs`, `developer_tools.rs`, `toast.rs` |
 | Web and desktop entrypoints | `packages/web/src/main.rs`, `packages/desktop/src/main.rs` |
-| Project docs promises | `Documentation/DioxusFeatureMatrix.md`, `README.md`, `AGENTS.md`, `.codex/rules/*` |
+| Project docs promises | `README.md`, `AGENTS.md`, `.codex/rules/*` |
+| Template/Generated split | Root `README.md`, root `AGENTS.md`, `.specs/template/`, `.specs/generated/`, `.codex/project-identity.md`, `create-project-from-template` skill |
 | Tests and task completion | `packages/ui/tests`, inline Rust tests, `tasks.md` checkbox state when present |
 
 ## Output Standard
@@ -102,4 +103,4 @@ Keep the report concrete and evidence-backed:
 
 ## Remediation Rules
 
-After the user chooses a direction, use the narrowest patch that restores alignment. For Dioxus behavior changes, also follow `.codex/skills/dioxus-project-template/SKILL.md`, `.codex/rules/dioxus-0.7-workflow.md`, and update `Documentation/DioxusFeatureMatrix.md` when feature usage, routes, cache behavior, platform support, or future work changes.
+After the user chooses a direction, use the narrowest patch that restores alignment. For Dioxus behavior changes, also follow `.codex/skills/dioxus-project-template/SKILL.md`, `.codex/rules/dioxus-0.7-workflow.md`, and update the root `README.md` Dioxus Features section when feature usage, routes, cache behavior, platform support, or future work changes.

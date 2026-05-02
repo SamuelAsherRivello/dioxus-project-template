@@ -8,6 +8,7 @@ default = []
 
 [dependencies]
 dioxus = { workspace = true, features = ["router"] }
+dioxus-primitives = { git = "https://github.com/DioxusLabs/components.git", rev = "11e57d00f5a69eed69519dae7a4e735fa6735ca3" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 chrono = { version = "0.4", features = ["serde"] }

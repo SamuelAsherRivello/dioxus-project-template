@@ -33,7 +33,10 @@ fn AppLayout() -> Element {
     use_context_provider(|| data_load_cache);
     use_context_provider(|| toast);
 
-    let shell_class = format!("app-shell {}", theme().class_name());
+    let shell_class = format!(
+        "app-shell {} min-h-screen h-screen overflow-x-hidden overflow-y-scroll text-[var(--app-text)]",
+        theme().class_name()
+    );
 
     rsx! {
         div { class: "{shell_class}",
@@ -53,8 +56,7 @@ fn AppLayout() -> Element {
 fn PageStack() -> Element {
     rsx! {
         div {
-            class: "page-stack",
-            style: "position: relative; isolation: isolate;",
+            class: "page-stack relative isolate",
             Page { route: Route::Page01 {}, will_preload: true,
                 Page01 {}
             }
@@ -87,6 +89,7 @@ pub mod components {
     pub mod page;
     pub mod page_footer;
     pub mod page_header;
+    pub mod prompt;
     pub mod toast;
 }
 pub use components::app_error::AppErrorFallback;

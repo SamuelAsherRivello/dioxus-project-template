@@ -38,7 +38,7 @@ A visitor can toggle between two themes and change the language from the top bar
 - **FR-009**: Normal database reads MUST NOT recreate, clear, or reseed an existing database.
 - **FR-010**: The top bar MUST keep navigation, theme toggle, language dropdown, GitHub link, DB refresh action, and toast region.
 - **FR-011**: The app MUST keep web and desktop entrypoints that launch the same shared UI.
-- **FR-012**: `Documentation/DioxusFeatureMatrix.md` MUST describe the current Dioxus feature usage and stay current as development continues.
+- **FR-012**: The root `README.md` Dioxus Features section MUST describe the current Dioxus feature usage and stay current as development continues.
 - **FR-013**: Future implementation work MUST follow the project coding standards for idiomatic Rust and Dioxus 0.7 APIs documented in the project constitution.
 
 ## Key Entities

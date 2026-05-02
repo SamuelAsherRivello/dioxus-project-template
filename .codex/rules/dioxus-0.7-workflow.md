@@ -7,6 +7,7 @@ Primary docs: https://dioxuslabs.com/learn/0.7/
 ## First Pass
 
 - Read `AGENTS.md`, this file, and the files directly involved in the requested behavior before editing.
+- Respect the repo's two layers: Template Project files maintain the reusable template, while `.specs/generated/` files seed the copied Generated Project.
 - Keep shared UI and business logic in `packages/ui`; keep target entrypoints in `packages/web` and `packages/desktop`.
 - Preserve both web and desktop unless the request is explicitly platform-specific.
 - Prefer existing app patterns before adding new abstractions. This template uses context signals for theme, language, template data load requests, cached template data results, and toast state.
@@ -61,7 +62,14 @@ Primary docs: https://dioxuslabs.com/learn/0.7/
 
 ## Documentation
 
-- Keep `Documentation/DioxusFeatureMatrix.md` updated whenever current Dioxus feature usage or planned extension points change.
+- For Template Project workflow changes, update root `README.md`, root `AGENTS.md`, `.specs/template/`, `.codex/`, and the creation skill as needed.
+- For Generated Project starter changes, update `.specs/generated/` and keep the creation skill aligned.
+- Keep the root `README.md` Dioxus Features section updated whenever current Dioxus feature usage or planned extension points change.
+
+| Markdown pattern | Preferred format |
+| ---------------- | ---------------- |
+| Multiple related items | Use a table instead of bullets or numbered lists unless the content is procedural code guidance or a short nested explanation. |
+| Boolean table cells | Use ✅ for yes and ❌ for no instead of spelling out `Yes` or `No`. |
 
 ## Verification
 
@@ -73,7 +81,7 @@ cargo check -p web --target wasm32-unknown-unknown
 cargo check -p desktop
 .\Scripts\Other\RunTests.ps1
 .\Scripts\Common\RunWeb.ps1
-.\Scripts\Common\RunDesktop.ps1
+.\Scripts\Other\RunDesktop.ps1
 ```
 
 Use a concrete local IPv4 address instead of `0.0.0.0` for web testing on Windows. If port `8080` is already serving an older build, stop that server and restart this project before trusting browser results.

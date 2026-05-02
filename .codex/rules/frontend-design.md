@@ -4,6 +4,7 @@ Use this rule when changing user-visible UI, CSS, layout, component composition,
 
 ## Direction
 
+- Keep Template Project docs and Generated Project starter docs separate; visible app UI should remain generic unless a specific generated-project feature asks otherwise.
 - Keep the template quiet, readable, and easy to repopulate.
 - Favor reusable app structure over product-specific decoration.
 - Preserve the top bar, theme toggle, language dropdown, toast region, and three-page route shape unless a future spec changes them.

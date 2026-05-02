@@ -18,7 +18,7 @@ Theme, language, and browser template data snapshots remain local user preferenc
 First-time native database/schema/seed setup MUST live in `create_database_if_missing()` in the database service. Normal read paths MUST NOT recreate, clear, or reseed an existing database.
 
 ### VI. Verify Real Behavior
-Browser-visible changes SHOULD be checked against the served web app when practical. Use repository scripts for repeat workflows, especially `.\Scripts\Common\RunWeb.ps1`, `.\Scripts\Common\RunDesktop.ps1`, and `.\Scripts\Other\RunTests.ps1`. Compile success alone is not enough for browser runtime or visible UI issues.
+Browser-visible changes SHOULD be checked against the served web app when practical. Use repository scripts for repeat workflows, especially `.\Scripts\Common\RunWeb.ps1`, `.\Scripts\Other\RunDesktop.ps1`, and `.\Scripts\Other\RunTests.ps1`. Compile success alone is not enough for browser runtime or visible UI issues.
 
 ### VII. Rust And Dioxus Coding Standards
 All code MUST follow idiomatic Rust formatting, naming, ownership, and error-handling practices. Use `rustfmt` default formatting, Rust naming conventions (`snake_case` for functions/modules, `UpperCamelCase` for types/components, and `SCREAMING_SNAKE_CASE` for constants), and meaningful `Result` errors for expected failures instead of panics or `unwrap()` in runtime paths.

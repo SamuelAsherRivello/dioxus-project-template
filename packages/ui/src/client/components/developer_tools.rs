@@ -7,6 +7,24 @@ use crate::client::services::localization_service::AppLanguage;
 use crate::client::services::server_contact_service::contact_server;
 use crate::client::services::storage_service::{save_language, save_theme, Theme};
 
+const TOOLS_CLASS: &str = "developer-tools ml-auto inline-flex min-w-max flex-none items-center justify-end gap-2 max-md:gap-1.5 max-[430px]:min-w-0";
+const TOOL_GROUP_CLASS: &str = "inline-flex h-[58px] items-center gap-1.5 rounded-lg border border-transparent bg-[var(--app-control)]/50 px-1.5 py-[5px] max-md:h-[46px] max-md:px-1 max-md:py-[3px] max-sm:h-[42px] max-sm:p-[3px] max-[430px]:h-10 max-[430px]:p-0.5";
+const TOOL_LABEL_CLASS: &str = "block max-w-6 whitespace-normal text-center text-[8px] font-bold leading-[9px] text-[var(--app-text-subtle)] max-md:hidden";
+const TOOL_CONTROLS_CLASS: &str =
+    "inline-flex items-center justify-center gap-1.5 max-md:gap-1 max-[430px]:gap-[3px]";
+const ICON_LINK_CLASS: &str = "inline-flex h-10 w-10 flex-none items-center justify-center rounded-lg border border-[var(--app-control-border)] bg-[var(--app-control)] text-[var(--app-text)] transition duration-150 hover:-translate-y-px hover:bg-[var(--app-control-hover)] hover:text-[var(--app-accent-strong)] focus-visible:-translate-y-px focus-visible:bg-[var(--app-control-hover)] focus-visible:text-[var(--app-accent-strong)] visited:text-[var(--app-text)] max-sm:h-9 max-sm:w-9 max-[430px]:h-[34px] max-[430px]:w-8";
+const TOOL_BUTTON_CLASS: &str = "inline-flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg border border-[var(--app-control-border)] bg-[var(--app-control)] px-[13px] text-sm font-bold text-[var(--app-text-muted)] transition duration-150 hover:-translate-y-px hover:bg-[var(--app-control-hover)] hover:text-[var(--app-accent-strong)] focus-visible:-translate-y-px focus-visible:bg-[var(--app-control-hover)] focus-visible:text-[var(--app-accent-strong)] max-md:h-10 max-md:w-10 max-md:flex-none max-md:gap-0 max-md:px-0 max-sm:h-9 max-sm:w-9 max-[430px]:h-[34px] max-[430px]:w-8";
+const TOOL_BUTTON_TEXT_CLASS: &str = "max-md:hidden";
+const TOOL_ICON_CLASS: &str = "flex-none max-[430px]:h-[17px] max-[430px]:w-[17px]";
+const LANGUAGE_MENU_CLASS: &str = "relative inline-flex items-center gap-1.5";
+const LANGUAGE_BUTTON_CLASS: &str = "inline-flex h-10 w-[62px] cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-[var(--app-control-border)] bg-[var(--app-control)] px-[9px] text-sm font-bold text-[var(--app-text-muted)] transition duration-150 hover:-translate-y-px hover:bg-[var(--app-control-hover)] hover:text-[var(--app-accent-strong)] focus-visible:-translate-y-px focus-visible:bg-[var(--app-control-hover)] focus-visible:text-[var(--app-accent-strong)] max-md:w-[52px] max-md:flex-none max-md:px-2 max-sm:h-9 max-sm:w-12 max-sm:px-1.5 max-[430px]:h-[34px] max-[430px]:w-[46px]";
+const FLAG_CLASS: &str = "block h-4 w-6 rounded-[2px] object-cover shadow-[0_0_0_1px_color-mix(in_srgb,var(--app-text)_16%,transparent)] max-[430px]:h-[15px] max-[430px]:w-[22px]";
+const LANGUAGE_CARET_CLASS: &str =
+    "flex-none text-xs leading-none text-[var(--app-text-subtle)] max-[430px]:text-[10px]";
+const LANGUAGE_OPTIONS_CLASS: &str = "absolute right-0 top-[calc(100%+8px)] z-30 grid gap-1 rounded-lg border border-[var(--app-control-border)] bg-[var(--app-surface-strong)] p-1.5 shadow-[var(--app-shadow-soft)]";
+const LANGUAGE_OPTION_CLASS: &str = "inline-flex h-8 w-10 cursor-pointer items-center justify-center rounded-md border border-transparent bg-transparent p-0 hover:border-[var(--app-accent)] hover:bg-[var(--app-accent-soft)] focus-visible:border-[var(--app-accent)] focus-visible:bg-[var(--app-accent-soft)]";
+const LANGUAGE_OPTION_ACTIVE_CLASS: &str = "inline-flex h-8 w-10 cursor-pointer items-center justify-center rounded-md border border-[var(--app-accent)] bg-[var(--app-accent-soft)] p-0";
+
 #[component]
 pub fn DeveloperTools() -> Element {
     let mut theme = use_context::<Signal<Theme>>();
@@ -19,19 +37,19 @@ pub fn DeveloperTools() -> Element {
     let mut i18n = i18n();
 
     rsx! {
-        div { class: "developer-tools",
-            div { class: "developer-tools__group",
-                span { class: "developer-tools__label", "Dev Tools" }
-                div { class: "developer-tools__controls",
+        div { class: TOOLS_CLASS,
+            div { class: TOOL_GROUP_CLASS,
+                span { class: TOOL_LABEL_CLASS, "Dev Tools" }
+                div { class: TOOL_CONTROLS_CLASS,
                     a {
-                    class: "developer-tools__github",
+                    class: ICON_LINK_CLASS,
                     href: "https://github.com/SamuelAsherRivello/dioxus-project-template",
                     target: "_blank",
                     rel: "noopener noreferrer",
                     aria_label: t!("open-github-repository"),
                     "data-tooltip": t!("open-github-repository"),
                     svg {
-                        class: "developer-tools__github-icon",
+                        class: "block h-6 w-6 max-[430px]:h-[21px] max-[430px]:w-[21px]",
                         width: "24",
                         height: "24",
                         view_box: "0 0 24 24",
@@ -42,7 +60,7 @@ pub fn DeveloperTools() -> Element {
                     }
                     }
                     button {
-                    class: "developer-tools__refresh-data",
+                    class: TOOL_BUTTON_CLASS,
                     r#type: "button",
                     aria_label: t!("refresh-template-data"),
                     "data-tooltip": t!("refresh-template-data"),
@@ -52,7 +70,7 @@ pub fn DeveloperTools() -> Element {
                         });
                     },
                     svg {
-                        class: "developer-tools__button-icon",
+                        class: TOOL_ICON_CLASS,
                         width: "18",
                         height: "18",
                         view_box: "0 0 24 24",
@@ -64,10 +82,10 @@ pub fn DeveloperTools() -> Element {
                         path { d: "M21 12a9 9 0 1 1-2.64-6.36" }
                         path { d: "M21 3v6h-6" }
                     }
-                    span { "DB" }
+                    span { class: TOOL_BUTTON_TEXT_CLASS, "DB" }
                     }
                     button {
-                    class: "developer-tools__server",
+                    class: TOOL_BUTTON_CLASS,
                     r#type: "button",
                     aria_label: "Server",
                     "data-tooltip": "Server",
@@ -90,7 +108,7 @@ pub fn DeveloperTools() -> Element {
                         }));
                     },
                     svg {
-                        class: "developer-tools__button-icon",
+                        class: TOOL_ICON_CLASS,
                         width: "18",
                         height: "18",
                         view_box: "0 0 24 24",
@@ -101,12 +119,12 @@ pub fn DeveloperTools() -> Element {
                         stroke_linejoin: "round",
                         polygon { points: "13 2 3 14 12 14 11 22 21 10 12 10 13 2" }
                     }
-                    span { "Server" }
+                    span { class: TOOL_BUTTON_TEXT_CLASS, "Server" }
                     }
                 }
             }
             button {
-                    class: "developer-tools__theme",
+                    class: TOOL_BUTTON_CLASS,
                     r#type: "button",
                     aria_label: t!("toggle-theme"),
                     "data-tooltip": t!("toggle-theme"),
@@ -116,7 +134,7 @@ pub fn DeveloperTools() -> Element {
                         save_theme(next_theme);
                     },
                     svg {
-                        class: "developer-tools__button-icon",
+                        class: TOOL_ICON_CLASS,
                         width: "18",
                         height: "18",
                         view_box: "0 0 24 24",
@@ -127,11 +145,11 @@ pub fn DeveloperTools() -> Element {
                         stroke_linejoin: "round",
                         path { d: "M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" }
                     }
-                    span { {t!("theme")} }
+                    span { class: TOOL_BUTTON_TEXT_CLASS, {t!("theme")} }
                 }
-            div { class: "developer-tools__language-menu",
+            div { class: LANGUAGE_MENU_CLASS,
                 button {
-                        class: "developer-tools__language",
+                        class: LANGUAGE_BUTTON_CLASS,
                         r#type: "button",
                         aria_label: t!("language-selector"),
                         "data-tooltip": t!("language-selector"),
@@ -141,21 +159,22 @@ pub fn DeveloperTools() -> Element {
                             language_menu_open.set(!is_open);
                         },
                         img {
+                            class: FLAG_CLASS,
                             src: selected_language.flag_asset(),
                             width: "24",
                             height: "16",
                             alt: "",
                         }
-                        span { class: "developer-tools__language-caret", "▾" }
+                        span { class: LANGUAGE_CARET_CLASS, "▾" }
                     }
                 if language_menu_open() {
-                    div { class: "developer-tools__language-options",
+                    div { class: LANGUAGE_OPTIONS_CLASS,
                         for option_language in AppLanguage::ALL {
                             button {
                                     class: if option_language == selected_language {
-                                        "developer-tools__language-option developer-tools__language-option--active"
+                                        LANGUAGE_OPTION_ACTIVE_CLASS
                                     } else {
-                                        "developer-tools__language-option"
+                                        LANGUAGE_OPTION_CLASS
                                     },
                                     r#type: "button",
                                     aria_label: match option_language {
@@ -177,6 +196,7 @@ pub fn DeveloperTools() -> Element {
                                         language_menu_open.set(false);
                                     },
                                     img {
+                                        class: FLAG_CLASS,
                                         src: option_language.flag_asset(),
                                         width: "24",
                                         height: "16",

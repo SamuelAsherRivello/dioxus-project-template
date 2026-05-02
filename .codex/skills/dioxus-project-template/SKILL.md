@@ -14,7 +14,8 @@ Use this skill for repository-specific execution context. Follow `AGENTS.md` and
 3. Read the files directly involved in the request before editing.
 4. Keep web and desktop support intact unless the request is explicitly platform-specific.
 5. Prefer the existing `packages/ui`, `packages/web`, and `packages/desktop` boundaries.
-6. Use the project scripts before inventing new commands.
+6. Identify whether the request targets the Template Project or Generated Project payload before editing root docs, `.specs/template/`, `.specs/generated/`, or specs.
+7. Use the project scripts before inventing new commands.
 
 ## Workspace Map
 
@@ -27,7 +28,10 @@ Use this skill for repository-specific execution context. Follow `AGENTS.md` and
 | `packages/ui/assets` | Shared CSS and localization/flag assets. |
 | `packages/web/src/main.rs` | Web entrypoint. |
 | `packages/desktop/src/main.rs` | Desktop entrypoint. |
-| `Documentation/DioxusFeatureMatrix.md` | Dioxus feature matrix that should stay current as development continues. |
+| `README.md` | Root documentation, including the Dioxus Features matrix that should stay current as development continues. |
+| `Documentation/Images` | README-visible image assets that must be refreshed after this skill is run. |
+| `.specs/template` | Template Project guidance and specs for maintaining this reusable template. |
+| `.specs/generated` | Generated Project root replacements and starter specs. |
 | `Scripts` | Windows PowerShell setup and run workflows. |
 
 ## Dioxus 0.7 Constraints
@@ -57,8 +61,17 @@ cargo check -p ui --target wasm32-unknown-unknown
 cargo check -p web --target wasm32-unknown-unknown
 cargo check -p desktop
 .\Scripts\Common\RunWeb.ps1
-.\Scripts\Common\RunDesktop.ps1
+.\Scripts\Other\RunDesktop.ps1
 .\Scripts\Other\RunTests.ps1
 ```
 
 For browser UI, routing, asset, or cache changes, serve the web app and inspect the actual page when practical.
+
+## Image Refresh Requirement
+
+After running this skill, update the README image assets in `Documentation/Images`:
+
+- `Documentation/Images/Infographic01.png` must be a new custom ChatGPT Images 2.0 or better infographic covering the current repo.
+- `Documentation/Images/Screenshot01.png` must be a screenshot of the actual running web app, not a mockup or generated UI image.
+
+Refresh these files in place so the root README image links remain valid. Serve the real web app before capturing `Screenshot01.png`, and verify both images exist before finishing.

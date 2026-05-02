@@ -12,8 +12,9 @@ Use this skill to carry a feature request from an initial target into working co
 1. Confirm the target behavior in one sentence.
 2. Read `AGENTS.md`, `.codex/rules/dioxus-0.7-workflow.md`, and any directly involved files before editing.
 3. If the feature changes UI, layout, assets, route presentation, loading states, toasts, empty states, or error states, read `.codex/rules/frontend-design.md`.
-4. Check `.specify/feature.json`; if it exists, treat its `feature_directory` as the active spec unless the user names another spec.
-5. Ask only for information that blocks a safe implementation. Prefer a documented assumption when the choice is low-risk.
+4. Identify whether the feature targets the Template Project itself or the Generated Project payload under `.specs/generated/`.
+5. Check `.specify/feature.json`; if it exists, treat its `feature_directory` as the active spec unless the user names another spec.
+6. Ask only for information that blocks a safe implementation. Prefer a documented assumption when the choice is low-risk.
 
 Useful intake questions, only when needed:
 
@@ -46,6 +47,7 @@ For direct spec edits, preserve the existing spec section order and keep require
 - Keep first-time native database/schema/seed setup in `create_database_if_missing()`.
 - Preserve visible loading or toast-style feedback for data loading, cache reads/writes, errors, and database creation.
 - Keep the template reusable: avoid product-specific decoration unless the requested feature is intentionally product-specific.
+- If changing generated starter docs/specs, edit `.specs/generated/` rather than only changing root Template Project docs.
 
 ## Testing
 
@@ -82,7 +84,8 @@ Continue the loop until the user confirms the behavior is complete or a real blo
 ## Documentation
 
 - Update the active `specs/<feature>/spec.md`, `plan.md`, or `tasks.md` when implemented behavior changes the agreed feature contract.
-- Update `Documentation/DioxusFeatureMatrix.md` whenever Dioxus feature usage, routes, cache behavior, platform support, or suggested future work changes.
+- Update `.specs/template/specs/` for Template Project maintenance requirements and `.specs/generated/specs/` for Generated Project starter requirements.
+- Update the root `README.md` Dioxus Features section whenever Dioxus feature usage, Dioxus Components usage, routes, cache behavior, platform support, or suggested future work changes.
 - Update README or package README files only when the feature changes documented usage, screenshots, setup, or user-facing project capability.
 
 ## Done
