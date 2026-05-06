@@ -128,49 +128,49 @@ Related tech: [Dioxus Components](https://dioxuslabs.com/components/)
 
 | # | Component Docs | Usage |
 | - | -------------- | ----- |
-| 1 | [Accordion](https://dioxuslabs.com/components/component/?name=accordion) | ❌ Not used. |
-| 2 | [Alert Dialog](https://dioxuslabs.com/components/component/?name=alert_dialog) | ✅ [`ConfirmationPrompt`](./packages/ui/src/client/components/prompt.rs) uses `dioxus_primitives::alert_dialog` for the Page03 confirmation flow. |
-| 3 | [Aspect Ratio](https://dioxuslabs.com/components/component/?name=aspect_ratio) | ✅ [`Page03`](./packages/ui/src/client/pages/page03.rs) uses `dioxus_primitives::aspect_ratio::AspectRatio` for the mobile-first prompt frame. |
-| 4 | [Avatar](https://dioxuslabs.com/components/component/?name=avatar) | ❌ Not used. |
-| 5 | [Badge](https://dioxuslabs.com/components/component/?name=badge) | ❌ Not used. |
-| 6 | [Button](https://dioxuslabs.com/components/component/?name=button) | ❌ The app uses native `button` elements with local Tailwind classes, not the Dioxus Components `Button`. |
-| 7 | [Calendar](https://dioxuslabs.com/components/component/?name=calendar) | ❌ Not used. |
-| 8 | [Card](https://dioxuslabs.com/components/component/?name=card) | ❌ Not used. |
-| 9 | [Checkbox](https://dioxuslabs.com/components/component/?name=checkbox) | ❌ Not used. |
-| 10 | [Collapsible](https://dioxuslabs.com/components/component/?name=collapsible) | ❌ Not used. |
-| 11 | [Color Picker](https://dioxuslabs.com/components/component/?name=color_picker) | ❌ Not used. |
-| 12 | [Context Menu](https://dioxuslabs.com/components/component/?name=context_menu) | ❌ Not used. |
-| 13 | [Date Picker](https://dioxuslabs.com/components/component/?name=date_picker) | ❌ Not used. |
-| 14 | [Dialog](https://dioxuslabs.com/components/component/?name=dialog) | ❌ The app uses Alert Dialog for confirmation; the general Dialog component is not used. |
-| 15 | [Drag And Drop List](https://dioxuslabs.com/components/component/?name=drag_and_drop_list) | ❌ Not used. |
-| 16 | [Dropdown Menu](https://dioxuslabs.com/components/component/?name=dropdown_menu) | ❌ The language selector is a local button/options menu, not the Dioxus Components Dropdown Menu. |
-| 17 | [Form](https://dioxuslabs.com/components/component/?name=form) | ❌ Not used. |
-| 18 | [Hover Card](https://dioxuslabs.com/components/component/?name=hover_card) | ❌ Not used. |
-| 19 | [Input](https://dioxuslabs.com/components/component/?name=input) | ❌ The app uses native `input` only where needed; the Dioxus Components `Input` is not installed. |
-| 20 | [Item](https://dioxuslabs.com/components/component/?name=item) | ❌ Not used. |
-| 21 | [Label](https://dioxuslabs.com/components/component/?name=label) | ❌ Not used. |
-| 22 | [Menubar](https://dioxuslabs.com/components/component/?name=menubar) | ❌ Not used. |
-| 23 | [Navbar](https://dioxuslabs.com/components/component/?name=navbar) | ❌ The template has a local [`PageHeader`](./packages/ui/src/client/components/page_header.rs), not the Dioxus Components Navbar. |
-| 24 | [Pagination](https://dioxuslabs.com/components/component/?name=pagination) | ❌ Not used. |
-| 25 | [Popover](https://dioxuslabs.com/components/component/?name=popover) | ❌ Not used. |
-| 26 | [Progress](https://dioxuslabs.com/components/component/?name=progress) | ❌ Not used. |
-| 27 | [Radio Group](https://dioxuslabs.com/components/component/?name=radio_group) | ❌ Not used. |
-| 28 | [Scroll Area](https://dioxuslabs.com/components/component/?name=scroll_area) | ❌ Not used. |
-| 29 | [Select](https://dioxuslabs.com/components/component/?name=select) | ❌ The app uses local button-based language choices, not the Dioxus Components Select. |
-| 30 | [Separator](https://dioxuslabs.com/components/component/?name=separator) | ❌ Not used. |
-| 31 | [Sheet](https://dioxuslabs.com/components/component/?name=sheet) | ❌ Not used. |
-| 32 | [Sidebar](https://dioxuslabs.com/components/component/?name=sidebar) | ❌ Not used. |
-| 33 | [Skeleton](https://dioxuslabs.com/components/component/?name=skeleton) | ❌ Not used. |
-| 34 | [Slider](https://dioxuslabs.com/components/component/?name=slider) | ❌ Not used. |
-| 35 | [Switch](https://dioxuslabs.com/components/component/?name=switch) | ❌ Not used. |
-| 36 | [Tabs](https://dioxuslabs.com/components/component/?name=tabs) | ❌ Not used. |
-| 37 | [Textarea](https://dioxuslabs.com/components/component/?name=textarea) | ❌ Not used. |
-| 38 | [Toast](https://dioxuslabs.com/components/component/?name=toast) | ❌ The app has a local [`ToastRegion`](./packages/ui/src/client/components/toast.rs); it does not use the Dioxus Components Toast. |
-| 39 | [Toggle](https://dioxuslabs.com/components/component/?name=toggle) | ❌ Not used. |
-| 40 | [Toggle Group](https://dioxuslabs.com/components/component/?name=toggle_group) | ❌ Not used. |
-| 41 | [Toolbar](https://dioxuslabs.com/components/component/?name=toolbar) | ❌ Not used. |
-| 42 | [Tooltip](https://dioxuslabs.com/components/component/?name=tooltip) | ❌ The app uses local `data-tooltip` styling in [`page_header.css`](./packages/ui/assets/styling/page_header.css), not the Dioxus Components Tooltip. |
-| 43 | [Virtual List](https://dioxuslabs.com/components/component/?name=virtual_list) | ❌ Not used. |
+| 1 | [Accordion](https://dioxuslabs.com/components/?name=accordion) | ❌ Not used. |
+| 2 | [Alert Dialog](https://dioxuslabs.com/components/?name=alert_dialog) | ✅ [`ConfirmationPrompt`](./packages/ui/src/client/components/prompt.rs) uses `dioxus_primitives::alert_dialog` for the Page03 confirmation flow. |
+| 3 | [Aspect Ratio](https://dioxuslabs.com/components/?name=aspect_ratio) | ✅ [`Page03`](./packages/ui/src/client/pages/page03.rs) uses `dioxus_primitives::aspect_ratio::AspectRatio` for the mobile-first prompt frame. |
+| 4 | [Avatar](https://dioxuslabs.com/components/?name=avatar) | ❌ Not used. |
+| 5 | [Badge](https://dioxuslabs.com/components/?name=badge) | ❌ Not used. |
+| 6 | [Button](https://dioxuslabs.com/components/?name=button) | ❌ The app uses native `button` elements with local Tailwind classes, not the Dioxus Components `Button`. |
+| 7 | [Calendar](https://dioxuslabs.com/components/?name=calendar) | ❌ Not used. |
+| 8 | [Card](https://dioxuslabs.com/components/?name=card) | ❌ Not used. |
+| 9 | [Checkbox](https://dioxuslabs.com/components/?name=checkbox) | ❌ Not used. |
+| 10 | [Collapsible](https://dioxuslabs.com/components/?name=collapsible) | ❌ Not used. |
+| 11 | [Color Picker](https://dioxuslabs.com/components/?name=color_picker) | ❌ Not used. |
+| 12 | [Context Menu](https://dioxuslabs.com/components/?name=context_menu) | ❌ Not used. |
+| 13 | [Date Picker](https://dioxuslabs.com/components/?name=date_picker) | ❌ Not used. |
+| 14 | [Dialog](https://dioxuslabs.com/components/?name=dialog) | ❌ The app uses Alert Dialog for confirmation; the general Dialog component is not used. |
+| 15 | [Drag And Drop List](https://dioxuslabs.com/components/?name=drag_and_drop_list) | ❌ Not used. |
+| 16 | [Dropdown Menu](https://dioxuslabs.com/components/?name=dropdown_menu) | ❌ The language selector is a local button/options menu, not the Dioxus Components Dropdown Menu. |
+| 17 | [Form](https://dioxuslabs.com/components/?name=form) | ❌ Not used. |
+| 18 | [Hover Card](https://dioxuslabs.com/components/?name=hover_card) | ❌ Not used. |
+| 19 | [Input](https://dioxuslabs.com/components/?name=input) | ❌ The app uses native `input` only where needed; the Dioxus Components `Input` is not installed. |
+| 20 | [Item](https://dioxuslabs.com/components/?name=item) | ❌ Not used. |
+| 21 | [Label](https://dioxuslabs.com/components/?name=label) | ❌ Not used. |
+| 22 | [Menubar](https://dioxuslabs.com/components/?name=menubar) | ❌ Not used. |
+| 23 | [Navbar](https://dioxuslabs.com/components/?name=navbar) | ❌ The template has a local [`PageHeader`](./packages/ui/src/client/components/page_header.rs), not the Dioxus Components Navbar. |
+| 24 | [Pagination](https://dioxuslabs.com/components/?name=pagination) | ❌ Not used. |
+| 25 | [Popover](https://dioxuslabs.com/components/?name=popover) | ❌ Not used. |
+| 26 | [Progress](https://dioxuslabs.com/components/?name=progress) | ❌ Not used. |
+| 27 | [Radio Group](https://dioxuslabs.com/components/?name=radio_group) | ❌ Not used. |
+| 28 | [Scroll Area](https://dioxuslabs.com/components/?name=scroll_area) | ❌ Not used. |
+| 29 | [Select](https://dioxuslabs.com/components/?name=select) | ❌ The app uses local button-based language choices, not the Dioxus Components Select. |
+| 30 | [Separator](https://dioxuslabs.com/components/?name=separator) | ❌ Not used. |
+| 31 | [Sheet](https://dioxuslabs.com/components/?name=sheet) | ❌ Not used. |
+| 32 | [Sidebar](https://dioxuslabs.com/components/?name=sidebar) | ❌ Not used. |
+| 33 | [Skeleton](https://dioxuslabs.com/components/?name=skeleton) | ❌ Not used. |
+| 34 | [Slider](https://dioxuslabs.com/components/?name=slider) | ❌ Not used. |
+| 35 | [Switch](https://dioxuslabs.com/components/?name=switch) | ❌ Not used. |
+| 36 | [Tabs](https://dioxuslabs.com/components/?name=tabs) | ❌ Not used. |
+| 37 | [Textarea](https://dioxuslabs.com/components/?name=textarea) | ❌ Not used. |
+| 38 | [Toast](https://dioxuslabs.com/components/?name=toast) | ❌ The app has a local [`ToastRegion`](./packages/ui/src/client/components/toast.rs); it does not use the Dioxus Components Toast. |
+| 39 | [Toggle](https://dioxuslabs.com/components/?name=toggle) | ❌ Not used. |
+| 40 | [Toggle Group](https://dioxuslabs.com/components/?name=toggle_group) | ❌ Not used. |
+| 41 | [Toolbar](https://dioxuslabs.com/components/?name=toolbar) | ❌ Not used. |
+| 42 | [Tooltip](https://dioxuslabs.com/components/?name=tooltip) | ❌ The app uses local `data-tooltip` styling in [`page_header.css`](./packages/ui/assets/styling/page_header.css), not the Dioxus Components Tooltip. |
+| 43 | [Virtual List](https://dioxuslabs.com/components/?name=virtual_list) | ❌ Not used. |
 
 ### Dioxus Features
 
@@ -197,7 +197,7 @@ Related tech: [Dioxus docs](https://dioxuslabs.com/learn/)
 | 15 | Localization | [dioxus-i18n](https://crates.io/crates/dioxus-i18n) | ✅ | [`localization_service`](./packages/ui/src/client/services/localization_service.rs) loads Fluent bundles for English, Spanish, Portuguese, and French. |
 | 16 | Theme persistence | [Signals](https://dioxuslabs.com/learn/0.7/essentials/basics/signals/) | ✅ | [`storage_service`](./packages/ui/src/client/services/storage_service.rs) persists the two theme choices for web and desktop. |
 | 17 | Web target | [Web platform](https://dioxuslabs.com/learn/0.7/guides/platforms/web/) | ✅ | [`packages/web`](./packages/web/src/main.rs) launches the same shared UI with web-specific favicon and CSS assets. |
-| 18 | Desktop target | [Desktop platform](https://dioxuslabs.com/learn/0.7/guides/platforms/desktop/) | ✅ | [`packages/desktop`](./packages/desktop/src/main.rs) launches the same shared UI with Dioxus desktop and a dark WebView boot color. |
+| 18 | Desktop target | [Desktop platform](https://dioxuslabs.com/learn/0.7/guides/platforms/desktop/) | ✅ | [`packages/desktop`](./packages/desktop/src/main.rs) launches the same shared UI with Dioxus desktop, a dark WebView boot color, and always-on-top disabled for normal window stacking. |
 | 19 | Server contact probe | [Web platform](https://dioxuslabs.com/learn/0.7/guides/platforms/web/) | ✅ | [`DeveloperTools`](./packages/ui/src/client/components/developer_tools.rs) includes a Server button that probes the same-origin web server and reports success or failure through the shared toast. |
 | 20 | Forms | [Forms](https://dioxuslabs.com/learn/0.7/essentials/fullstack/forms/) | ❌ | No in-app form flow is implemented yet. Add one when a future template spec needs form handling. |
 | 21 | Server functions | [Server functions](https://dioxuslabs.com/learn/0.7/essentials/fullstack/server_functions/) | ❌ | The template currently has no `#[server]`, `#[get]`, or `#[post]` server function. Add one only when a spec requires server execution. |
