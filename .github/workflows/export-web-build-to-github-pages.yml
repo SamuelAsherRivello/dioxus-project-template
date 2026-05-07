@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
     inputs:
       release_version:
-        description: Release folder name, for example v0.01.
-        required: true
+        description: Optional release folder name. Leave blank to use VERSION.txt.
+        required: false
 
 permissions:
   contents: write
@@ -25,14 +25,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.release_version || github.ref }}
+
       - name: Resolve release version
         shell: bash
         run: |
           set -euo pipefail
           release_version="${{ github.event.release.tag_name || inputs.release_version }}"
           if [ -z "${release_version}" ]; then
-            echo "::error::Release version is required."
-            exit 1
+            if [ ! -f VERSION.txt ]; then
+              echo "::error::Release version was blank and VERSION.txt does not exist."
+              exit 1
+            fi
+            version="$(tr -d '[:space:]' < VERSION.txt)"
+            release_version="v${version}"
           fi
           if ! [[ "${release_version}" =~ ^v0[.][0-9]{2}$ ]]; then
             echo "::error::Release version must look like v0.01."
@@ -70,11 +79,6 @@ jobs:
         with:
           enablement: ${{ env.PAGES_ENABLED == 'false' }}
           token: ${{ secrets.PAGES_ADMIN_TOKEN || github.token }}
-
-      - name: Checkout source
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.release.tag_name || inputs.release_version }}
 
       - name: Prepare release storage branch
         shell: bash

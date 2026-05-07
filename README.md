@@ -248,6 +248,8 @@ The release workflow uses this version style:
 
 Each published release builds the same public source for both GitHub Pages and the optional VPS deploy target.
 
+If a deploy workflow is run manually, leave the release version input blank to use the current `VERSION.txt`. Enter a value like `v0.01` only when redeploying a specific release folder.
+
 ### GitHub Pages URLs
 
 | URL | Purpose |
