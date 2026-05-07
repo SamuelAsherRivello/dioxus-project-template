@@ -1,13 +1,17 @@
-name: ExportWebBuildToGithubPages
+name: ReleaseWebBuildToGithubPages
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types:
+      - published
   workflow_dispatch:
+    inputs:
+      release_version:
+        description: Release folder name, for example v0.1.0.
+        required: true
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -17,10 +21,26 @@ concurrency:
 
 jobs:
   build:
-    name: Build static web app
+    name: Build release web app
     runs-on: ubuntu-latest
 
     steps:
+      - name: Resolve release version
+        shell: bash
+        run: |
+          set -euo pipefail
+          release_version="${{ github.event.release.tag_name || inputs.release_version }}"
+          if [ -z "${release_version}" ]; then
+            echo "::error::Release version is required."
+            exit 1
+          fi
+          if ! [[ "${release_version}" =~ ^v[0-9]+[.][0-9]+[.][0-9]+([-+][A-Za-z0-9._-]+)?$ ]]; then
+            echo "::error::Release version must look like v0.1.0."
+            exit 1
+          fi
+          echo "RELEASE_VERSION=${release_version}" >> "${GITHUB_ENV}"
+          echo "PAGES_REPO_NAME=${GITHUB_REPOSITORY#*/}" >> "${GITHUB_ENV}"
+
       - name: Check GitHub Pages setup
         shell: bash
         env:
@@ -51,8 +71,25 @@ jobs:
           enablement: ${{ env.PAGES_ENABLED == 'false' }}
           token: ${{ secrets.PAGES_ADMIN_TOKEN || github.token }}
 
-      - name: Checkout
+      - name: Checkout source
         uses: actions/checkout@v4
+
+      - name: Prepare release storage branch
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p pages-store
+          git -C pages-store init
+          git -C pages-store remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git -C pages-store fetch --depth=1 origin pages-releases; then
+            git -C pages-store checkout pages-releases
+          else
+            git -C pages-store checkout --orphan pages-releases
+            git -C pages-store rm -rf . || true
+          fi
+          touch pages-store/.nojekyll
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Install Rust wasm target
         run: rustup target add wasm32-unknown-unknown
@@ -63,25 +100,76 @@ jobs:
       - name: Install Dioxus CLI
         run: cargo install dioxus-cli --version 0.7.6 --locked
 
-      - name: Build web app
-        run: dx build --package web --platform web --release --base-path dioxus-project-template
+      - name: Build versioned web app
+        run: dx build --package web --platform web --release --base-path "${PAGES_REPO_NAME}/releases/${RELEASE_VERSION}"
 
-      - name: Prepare Pages artifact
+      - name: Copy versioned release
         shell: bash
         run: |
           set -euxo pipefail
-          mkdir -p pages
-          cp -a target/dx/web/release/web/public/. pages/
-          cp pages/index.html pages/404.html
-          touch pages/.nojekyll
-          grep -q "Dioxus Project Template" pages/index.html
-          grep -q "/dioxus-project-template/assets/web-" pages/index.html
-          find pages/assets -maxdepth 1 -name 'web_bg-*.wasm' -print -quit | grep -q .
+          rm -rf "pages-store/releases/${RELEASE_VERSION}"
+          mkdir -p "pages-store/releases/${RELEASE_VERSION}"
+          cp -a target/dx/web/release/web/public/. "pages-store/releases/${RELEASE_VERSION}/"
+          cp "pages-store/releases/${RELEASE_VERSION}/index.html" "pages-store/releases/${RELEASE_VERSION}/404.html"
+          grep -q "Dioxus Project Template" "pages-store/releases/${RELEASE_VERSION}/index.html"
+          grep -q "/${PAGES_REPO_NAME}/releases/${RELEASE_VERSION}/assets/web-" "pages-store/releases/${RELEASE_VERSION}/index.html"
+          find "pages-store/releases/${RELEASE_VERSION}/assets" -maxdepth 1 -name 'web_bg-*.wasm' -print -quit | grep -q .
+
+      - name: Build latest web app
+        run: dx build --package web --platform web --release --base-path "${PAGES_REPO_NAME}/latest"
+
+      - name: Copy latest release
+        shell: bash
+        run: |
+          set -euxo pipefail
+          rm -rf pages-store/latest
+          mkdir -p pages-store/latest
+          cp -a target/dx/web/release/web/public/. pages-store/latest/
+          cp pages-store/latest/index.html pages-store/latest/404.html
+          grep -q "Dioxus Project Template" pages-store/latest/index.html
+          grep -q "/${PAGES_REPO_NAME}/latest/assets/web-" pages-store/latest/index.html
+          find pages-store/latest/assets -maxdepth 1 -name 'web_bg-*.wasm' -print -quit | grep -q .
+
+      - name: Add root redirect
+        shell: bash
+        run: |
+          set -euxo pipefail
+          cat > pages-store/index.html <<'HTML'
+          <!doctype html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8">
+              <meta http-equiv="refresh" content="0; url=./latest/">
+              <title>Dioxus Project Template</title>
+            </head>
+            <body>
+              <a href="./latest/">Open latest release</a>
+            </body>
+          </html>
+          HTML
+
+      - name: Commit release storage branch
+        shell: bash
+        run: |
+          set -euxo pipefail
+          git -C pages-store config user.name "github-actions[bot]"
+          git -C pages-store config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C pages-store add .
+          if git -C pages-store diff --cached --quiet; then
+            echo "No Pages release storage changes to commit."
+          else
+            git -C pages-store commit -m "Publish ${RELEASE_VERSION} web release"
+            git -C pages-store push origin pages-releases
+          fi
+
+      - name: Remove Pages storage git metadata
+        shell: bash
+        run: rm -rf pages-store/.git
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: pages
+          path: pages-store
 
   deploy:
     name: Deploy to GitHub Pages
