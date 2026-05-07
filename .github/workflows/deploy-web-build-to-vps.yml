@@ -1,0 +1,127 @@
+name: ReleaseWebBuildToVps
+
+on:
+  release:
+    types:
+      - published
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: Release folder name, for example v0.01.
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vps-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and deploy to VPS
+    runs-on: ubuntu-latest
+
+    env:
+      VPS_HOST: ${{ secrets.VPS_HOST }}
+      VPS_PORT: ${{ secrets.VPS_PORT || '22' }}
+      VPS_USER: ${{ secrets.VPS_USER }}
+      VPS_DEPLOY_ROOT: ${{ secrets.VPS_DEPLOY_ROOT }}
+      VPS_SERVICE_NAME: ${{ secrets.VPS_SERVICE_NAME }}
+      VPS_APP_NAME: ${{ secrets.VPS_APP_NAME || github.event.repository.name }}
+
+    steps:
+      - name: Resolve release version
+        shell: bash
+        run: |
+          set -euo pipefail
+          release_version="${{ github.event.release.tag_name || inputs.release_version }}"
+          if [ -z "${release_version}" ]; then
+            echo "::error::Release version is required."
+            exit 1
+          fi
+          if ! [[ "${release_version}" =~ ^v0[.][0-9]{2}$ ]]; then
+            echo "::error::Release version must look like v0.01."
+            exit 1
+          fi
+          echo "RELEASE_VERSION=${release_version}" >> "${GITHUB_ENV}"
+
+      - name: Validate required secrets
+        shell: bash
+        env:
+          HAS_VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY != '' }}
+          HAS_VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS != '' }}
+        run: |
+          set -euo pipefail
+          missing=0
+          for name in VPS_HOST VPS_USER VPS_DEPLOY_ROOT; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Missing required secret ${name}."
+              missing=1
+            fi
+          done
+          if [ "${HAS_VPS_SSH_KEY}" != "true" ]; then
+            echo "::error::Missing required secret VPS_SSH_KEY."
+            missing=1
+          fi
+          if [ "${HAS_VPS_KNOWN_HOSTS}" != "true" ]; then
+            echo "::error::Missing required secret VPS_KNOWN_HOSTS."
+            missing=1
+          fi
+          exit "${missing}"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.release_version }}
+
+      - name: Install Rust wasm target
+        run: rustup target add wasm32-unknown-unknown
+
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install Dioxus CLI
+        run: cargo install dioxus-cli --version 0.7.6 --locked
+
+      - name: Build VPS web release
+        shell: bash
+        run: |
+          set -euo pipefail
+          dx build --package web --platform web --release --base-path "${VPS_APP_NAME}/releases/${RELEASE_VERSION}"
+          rm -rf vps-artifact
+          mkdir -p vps-artifact/public
+          cp -a target/dx/web/release/web/public/. vps-artifact/public/
+          cp vps-artifact/public/index.html vps-artifact/public/404.html
+          find vps-artifact/public/assets -maxdepth 1 -name 'web_bg-*.wasm' -print -quit | grep -q .
+
+      - name: Configure SSH
+        shell: bash
+        run: |
+          set -euo pipefail
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/vps_deploy_key
+          chmod 600 ~/.ssh/vps_deploy_key
+          printf '%s\n' "${{ secrets.VPS_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Upload release to VPS
+        shell: bash
+        run: |
+          set -euo pipefail
+          remote_app_dir="${VPS_DEPLOY_ROOT%/}/${VPS_APP_NAME}"
+          remote_release_dir="${remote_app_dir}/releases/${RELEASE_VERSION}"
+          ssh -i ~/.ssh/vps_deploy_key -p "${VPS_PORT}" "${VPS_USER}@${VPS_HOST}" \
+            "mkdir -p '${remote_release_dir}' '${remote_app_dir}/shared'"
+          rsync -az --delete -e "ssh -i ~/.ssh/vps_deploy_key -p ${VPS_PORT}" \
+            vps-artifact/ "${VPS_USER}@${VPS_HOST}:${remote_release_dir}/"
+          ssh -i ~/.ssh/vps_deploy_key -p "${VPS_PORT}" "${VPS_USER}@${VPS_HOST}" \
+            "ln -sfn '${remote_release_dir}' '${remote_app_dir}/current'"
+
+      - name: Restart VPS service
+        if: ${{ env.VPS_SERVICE_NAME != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          ssh -i ~/.ssh/vps_deploy_key -p "${VPS_PORT}" "${VPS_USER}@${VPS_HOST}" \
+            "sudo systemctl restart '${VPS_SERVICE_NAME}'"

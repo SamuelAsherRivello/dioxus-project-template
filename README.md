@@ -14,15 +14,16 @@ Clone the repo and use the [`create-project-from-template` skill](./.codex/skill
 - [Details](#details)
   - [Structure](#structure)
   - [Features](#features)
+    - [Release Deployment](#release-deployment)
 - [Credits](#credits)
 
 <BR>
 
 ## Live Demo
 
-https://samuelasherrivello.github.io/dioxus-project-template/
+https://samuelasherrivello.github.io/dioxus-project-template/latest/
 
-The static web build is exported and hosted automatically with each push to the main branch.
+The static web build is exported and hosted when a GitHub Release is published. Versioned releases live under `/releases/<version>/`, and `/latest/` points at the newest release.
 
 <!-- AI: Section purpose: show the hosted template web build. When `.codex/skills/create-project-from-template` is used, update `.specs/generated/README.md` only if generated projects should also advertise a live deployment link; otherwise leave this template-only Pages URL out of generated READMEs. -->
 
@@ -221,9 +222,81 @@ Choose one setup option:
 | Enable Pages manually | In GitHub, open `Settings > Pages` and set `Source` to `GitHub Actions`. Do not select a branch source. |
 | Add `PAGES_ADMIN_TOKEN` | Add a repository secret named `PAGES_ADMIN_TOKEN` with Pages write permission so the workflow can enable or repair Pages setup without creating another action. |
 
-The GitHub Actions display name is `ExportWebBuildToGithubPages`.
+The GitHub Actions display names are:
+
+| Workflow | Purpose |
+| -------- | ------- |
+| `PerformRelease` | Manually increments `VERSION.txt`, updates Cargo package versions, commits, tags, and creates a GitHub Release. |
+| `ReleaseWebBuildToGithubPages` | Builds the release web app and publishes `/releases/<version>/` plus `/latest/` to GitHub Pages. |
+| `ReleaseWebBuildToVps` | Builds the release web app and deploys it to a configured VPS using repository secrets. |
 
 <!-- AI: Section purpose: document the one supported GitHub Pages workflow and prevent competing branch-based Pages deployments. When `.codex/skills/create-project-from-template` is used, update `.specs/generated/README.md` only if generated repos should start with the same Pages guidance; make sure any generated project URL uses the renamed repository. -->
+
+### Release Deployment
+
+Use GitHub Releases as the publishing boundary. Normal commits do not publish the project. To publish, run the `PerformRelease` workflow manually.
+
+[`VERSION.txt`](./VERSION.txt) is the release source of truth. It stores the public project version without the tag prefix, such as `0.01`. Release tags add `v`, such as `v0.01`.
+
+The release workflow uses this version style:
+
+| `VERSION.txt` | Git tag | Cargo package version |
+| ------------- | ------- | --------------------- |
+| `0.01` | `v0.01` | `0.1.0` |
+| `0.02` | `v0.02` | `0.2.0` |
+| `0.03` | `v0.03` | `0.3.0` |
+
+Each published release builds the same public source for both GitHub Pages and the optional VPS deploy target.
+
+### GitHub Pages URLs
+
+| URL | Purpose |
+| --- | ------- |
+| `/latest/` | Newest published release. |
+| `/releases/v0.01/` | Specific immutable release folder. |
+
+The Pages workflow stores release folders on the `pages-releases` branch, then deploys them through GitHub Pages Actions. Keep the repository Pages source set to `GitHub Actions`, not a branch.
+
+### VPS Secrets
+
+The VPS workflow is public, but the server details are not. Add these as repository secrets in `Settings > Secrets and variables > Actions`.
+
+| Secret | Required? | Purpose |
+| ------ | --------- | ------- |
+| `VPS_HOST` | ✅ | VPS hostname or IP address. |
+| `VPS_PORT` | ❌ | SSH port. Defaults to `22` when omitted. |
+| `VPS_USER` | ✅ | Dedicated deploy user, not root. |
+| `VPS_SSH_KEY` | ✅ | Private SSH deploy key for that user. |
+| `VPS_KNOWN_HOSTS` | ✅ | Pinned SSH host key line from `ssh-keyscan`. |
+| `VPS_DEPLOY_ROOT` | ✅ | Root deployment folder, such as `/srv/apps`. |
+| `VPS_APP_NAME` | ❌ | App folder name. Defaults to the repository name. |
+| `VPS_SERVICE_NAME` | ❌ | Systemd service to restart after deploy. Leave blank for static-only apps. |
+
+The VPS deploy convention is:
+
+```text
+/srv/apps/<app-name>/
+  releases/
+    v0.01/
+      public/
+  shared/
+  current -> releases/v0.01
+```
+
+Keep the deploy user restricted to the app folder. If `VPS_SERVICE_NAME` is used, allow only that service restart through sudo.
+
+### VPS Cost And Safety
+
+For public hobby demos, avoid surprise costs by keeping apps small and boring:
+
+- Do not run VPS deploys from pull requests.
+- Keep app servers bound to `127.0.0.1`.
+- Put Caddy or Nginx in front of public apps.
+- Add upload size limits before accepting uploads.
+- Add rate limits before sharing public URLs.
+- Rotate logs so demos cannot fill the disk.
+- Do not commit `.env` files or production secrets.
+- Use GitHub secrets only for deployment details.
 
 ### Tailwind Features
 
